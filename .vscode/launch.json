@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Bronze: ingest CSV",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/spark/apps/qttg/bronze_qttg.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--input-dir",
+                "file:///c:/Users/Administrator/etl_learn",
+                "--output-dir",
+                "file:///c:/Users/Administrator/etl_learn/output/spark_lake/bronze"
+            ]
+        }
+    ]
+}

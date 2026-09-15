@@ -1,0 +1,1 @@
+"""QTTG Spark application package."""

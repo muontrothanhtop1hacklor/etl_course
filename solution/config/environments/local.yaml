@@ -1,0 +1,9 @@
+app_name: qttg-etl
+input_dir: ./requirements/data
+output_dir: ./solution/output/spark_lake
+expected_master_rows: 142857
+expected_detail_rows: 1000000
+layers:
+  - bronze
+  - silver
+  - gold

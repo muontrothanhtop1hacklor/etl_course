@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+.env.*
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+*~
+
+# Spark / data artifacts
+*.parquet
+*.crc
+solution/output/**
+requirements/data/**/*.csv
+requirements/data/**/*.CSV
+requirements/data/**/*.parquet
+requirements/data/**/*.xlsx
+requirements/data/**/*.xls
+
+# GitHub / local secrets
+secrets/
+config/*.json
+config/*.yaml
+config/*.yml
+!config/README.md
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/

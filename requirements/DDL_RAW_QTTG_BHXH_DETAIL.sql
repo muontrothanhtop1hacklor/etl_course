@@ -1,0 +1,102 @@
+-- Oracle 19c+
+-- Create RAW_QTTG_BHXH before running this DDL.
+
+CREATE SEQUENCE VSS_ODS.SEQ_RAW_QTTG_BHXH_DETAIL
+    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+CREATE TABLE VSS_ODS.RAW_QTTG_BHXH_DETAIL (
+    ID                    NUMBER(19)         NOT NULL,
+    MASTER_ID             NUMBER(19)         NOT NULL,
+    NLD_ID                NUMBER(19)         NOT NULL,
+    DOT_PHAT_SINH         VARCHAR2(50 CHAR),
+    TU_THANG              VARCHAR2(20 CHAR),
+    DEN_THANG             VARCHAR2(20 CHAR),
+    MA_DON_VI             VARCHAR2(50 CHAR),
+    TEN_DON_VI            VARCHAR2(500 CHAR),
+    LOAI_DT               VARCHAR2(50 CHAR),
+    LOAI                  NUMBER(5),
+    PA                    VARCHAR2(50 CHAR),
+    DON_VI_TINH           VARCHAR2(50 CHAR),
+    MA_NT                 VARCHAR2(20 CHAR),
+    CHUC_DANH_CV          VARCHAR2(200 CHAR),
+    CHUC_DANH_CV_PRE      VARCHAR2(200 CHAR),
+    NOI_LAM_VIEC          VARCHAR2(500 CHAR),
+    NOI_DUNG              VARCHAR2(1000 CHAR),
+    MUC_LUONG             NUMBER(19,4),
+    MUC_LUONG_TN          NUMBER(19,4),
+    MUC_LUONG_BHYT        NUMBER(19,4),
+    MUC_LUONG_PC          NUMBER(19,4),
+    MUC_LUONG_BS          NUMBER(19,4),
+    MUC_LUONG_NLD         NUMBER(19,4),
+    MUC_LUONG_NSNN        NUMBER(19,4),
+    MUC_LUONG_HS          NUMBER(19,4),
+    MUC_LUONG_TT          NUMBER(19,4),
+    HS_LUONG              NUMBER(10,4),
+    PC_CHUC_VU            NUMBER(10,4),
+    PC_THAM_NIEN          NUMBER(10,4),
+    PC_NGHE               NUMBER(10,4),
+    PC_KHU_VUC            NUMBER(10,4),
+    PC_KHAC               NUMBER(10,4),
+    PC_TAI_CU             NUMBER(10,4),
+    HS_TN                 NUMBER(10,4),
+    HS_NG                 NUMBER(10,4),
+    HS_TC                 NUMBER(10,4),
+    TYLE_BHXH             NUMBER(10,4),
+    TYLE_BHYT             NUMBER(10,4),
+    TYLE_BHTN             NUMBER(10,4),
+    TYLE_TUDV             NUMBER(10,4),
+    TYLE_HTTT             NUMBER(10,4),
+    TYLE_ODTS             NUMBER(10,4),
+    TYLE_TNLD             NUMBER(10,4),
+    TYLE_NSNN             NUMBER(10,4),
+    DK1                   NUMBER(1),
+    DK2                   NUMBER(1),
+    DK3                   NUMBER(1),
+    DK4                   NUMBER(1),
+    DK5                   NUMBER(1),
+    DK6                   NUMBER(1),
+    IS_BHXH               NUMBER(1),
+    IS_BHXH_BB            NUMBER(1),
+    IS_BHTN               NUMBER(1),
+    IS_BHYT               NUMBER(1),
+    IS_BHXH2              NUMBER(1),
+    IS_BHTN2              NUMBER(1),
+    IS_ERROR              NUMBER(1),
+    IS_TR                 NUMBER(1),
+    IS_BONUS              NUMBER(1),
+    ML_TC                 NUMBER(1),
+    GHI_CHU               VARCHAR2(500 CHAR),
+    KIEM_TRA              NUMBER(5),
+    SO_THANG              NUMBER(5),
+    MA_KHOI_TK            VARCHAR2(50 CHAR),
+    TY_LE_DONG            NUMBER(10,4),
+    MUC_DONG              NUMBER(19,4),
+    LUONG_CHINH           NUMBER(19,4),
+    CHUC_DANH_NLV         VARCHAR2(200 CHAR),
+    PHUONG_THUC           VARCHAR2(50 CHAR),
+    PHUONG_THUC_DONG      VARCHAR2(50 CHAR),
+    MUC_LUONG_PRE         NUMBER(19,4),
+    MUC_LUONG_PC_PRE      NUMBER(19,4),
+    MUC_LUONG_BS_PRE      NUMBER(19,4),
+    HS_LUONG_PRE          NUMBER(10,4),
+    PC_CHUC_VU_PRE        NUMBER(10,4),
+    PC_THAM_NIEN_PRE      NUMBER(10,4),
+    PC_NGHE_PRE           NUMBER(10,4),
+    PC_KHU_VUC_PRE        NUMBER(10,4),
+    PC_KHAC_PRE           NUMBER(10,4),
+    PC_TAI_CU_PRE         NUMBER(10,4),
+    LUONG_CHINH_PRE       NUMBER(19,4),
+    CREATED_AT            TIMESTAMP(6) DEFAULT SYSTIMESTAMP NOT NULL,
+    CONSTRAINT PK_RAW_QTTG_BHXH_DETAIL PRIMARY KEY (ID),
+    CONSTRAINT FK_RAW_QTTG_BHXH_DETAIL_M FOREIGN KEY (MASTER_ID)
+        REFERENCES VSS_ODS.RAW_QTTG_BHXH (ID)
+);
+
+CREATE INDEX VSS_ODS.IDX_RAW_QTTG_BHXH_DETAIL_M
+    ON VSS_ODS.RAW_QTTG_BHXH_DETAIL (MASTER_ID);
+
+CREATE INDEX VSS_ODS.IDX_RAW_QTTG_BHXH_DETAIL_NLD
+    ON VSS_ODS.RAW_QTTG_BHXH_DETAIL (NLD_ID);
+
+COMMENT ON TABLE VSS_ODS.RAW_QTTG_BHXH_DETAIL IS
+    'Chi tiet listDetails (quaTrinhDTO) - N row tren mot master RAW_QTTG_BHXH';
