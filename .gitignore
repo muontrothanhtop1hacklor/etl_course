@@ -28,7 +28,12 @@ Thumbs.db
 # Spark / data artifacts
 *.parquet
 *.crc
-solution/output/**
+!solution/output/
+!solution/output/**
+!solution/output/**/*.parquet
+!solution/output/**/*.crc
+!docs/results/
+!docs/results/**
 requirements/data/**/*.csv
 requirements/data/**/*.CSV
 requirements/data/**/*.parquet
