@@ -46,7 +46,7 @@
 ## 6. Ghi chú
 - Đây là bước quan trọng chuẩn bị cho Gold
 - Silver nên là layer “đã sạch”, còn Gold chỉ làm aggregation và KPI
-- Output Parquet không nên commit lên GitHub vì là dữ liệu sinh ra runtime
+- Parquet đầy đủ không nên commit lên GitHub vì là dữ liệu sinh ra runtime; bộ sample output nhỏ được lưu tại [evidence](../../solution/output/evidence/) để minh chứng kết quả.
 
 ## 7. Kế hoạch tiếp theo
 - Viết Gold layer cho KPI và báo cáo

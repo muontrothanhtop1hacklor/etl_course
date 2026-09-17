@@ -90,14 +90,16 @@ python .\solution\app\etl\main.py
 ## 6. Lưu ý về tiến độ
 
 - Mỗi bài học nên có một file log riêng để cập nhật mục tiêu, công việc đã làm, kết quả, vấn đề và việc tiếp theo.
-- Dữ liệu raw lớn và output Spark không nên được commit lên GitHub.
-- Repo nên dùng để theo dõi code, cấu trúc, và tiến độ học tập, không phải để lưu trữ dữ liệu kích thước lớn.
+- Dữ liệu raw lớn và Parquet output đầy đủ không nên được commit lên GitHub.
+- Repo có commit bộ output mẫu nhỏ trong `solution/output/evidence/` để minh chứng kết quả Bronze, Silver và quarantine.
+- Repo dùng để theo dõi code, cấu trúc, tiến độ học tập và kết quả đại diện; không phải để lưu trữ toàn bộ dữ liệu kích thước lớn.
 
 ## 7. Nguồn dữ liệu
 
 - Dữ liệu QTTG BHXH theo yêu cầu nghiệp vụ
 - DDL, tài liệu và hướng dẫn thiết kế nằm trong folder requirements
 - Output Bronze được sinh ra trong folder solution/output
+- [Minh chứng output Bronze/Silver trên GitHub](docs/results/qttg-output-evidence.md)
 
 ## 8. Cách cập nhật bài mới
 
