@@ -78,10 +78,7 @@ services:
       - "7077:7077"
       - "8081:8080"
     volumes:
-      - ../solution/spark/apps/qttg/bronze_qttg.py:/opt/spark/apps/qttg/bronze_qttg.py:ro
-      - ../solution/apps/qttg/silver_qttg.py:/opt/spark/apps/qttg/silver_qttg.py:ro
-      - ../solution/apps/qttg/gold_qttg.py:/opt/spark/apps/qttg/gold_qttg.py:ro
-      - ../solution/apps/qttg/validate_qttg.py:/opt/spark/apps/qttg/validate_qttg.py:ro
+      - ../solution/apps/qttg:/opt/spark/apps/qttg:ro
       - ../requirements/data:/opt/spark/data/raw_qttg_1m:ro
       - ../solution/output/spark_lake:/opt/spark/data/lake
     networks:
@@ -92,10 +89,7 @@ services:
     image: apache/spark:3.5.3
     container_name: tst-spark-worker
     volumes:
-      - ../solution/spark/apps/qttg/bronze_qttg.py:/opt/spark/apps/qttg/bronze_qttg.py:ro
-      - ../solution/apps/qttg/silver_qttg.py:/opt/spark/apps/qttg/silver_qttg.py:ro
-      - ../solution/apps/qttg/gold_qttg.py:/opt/spark/apps/qttg/gold_qttg.py:ro
-      - ../solution/apps/qttg/validate_qttg.py:/opt/spark/apps/qttg/validate_qttg.py:ro
+      - ../solution/apps/qttg:/opt/spark/apps/qttg:ro
       - ../requirements/data:/opt/spark/data/raw_qttg_1m:ro
       - ../solution/output/spark_lake:/opt/spark/data/lake
     depends_on:
