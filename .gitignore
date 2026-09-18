@@ -55,3 +55,7 @@ dist/
 .mypy_cache/
 coverage.xml
 htmlcov/
+
+solution/output/spark_lake/
+
+wednesday.txt

@@ -1,0 +1,112 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - qttg-net
+
+  airflow-init:
+    image: apache/airflow:2.10.5
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment: &airflow-env
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__WEBSERVER__SECRET_KEY: local-qttg-demo-only
+    volumes: &airflow-volumes
+      - ./dags:/opt/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: "0:0"
+    networks:
+      - qttg-net
+    command:
+      - bash
+      - -c
+      - |
+        airflow db migrate &&
+        (airflow users create
+          --username admin
+          --password admin
+          --firstname Local
+          --lastname Admin
+          --role Admin
+          --email admin@example.local || true)
+
+  airflow-webserver:
+    image: apache/airflow:2.10.5
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    environment: *airflow-env
+    volumes: *airflow-volumes
+    user: "0:0"
+    ports:
+      - "8082:8080"
+    networks:
+      - qttg-net
+    command: webserver
+
+  airflow-scheduler:
+    image: apache/airflow:2.10.5
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    environment: *airflow-env
+    volumes: *airflow-volumes
+    user: "0:0"
+    networks:
+      - qttg-net
+    command: scheduler
+
+  spark-master:
+    image: apache/spark:3.5.3
+    container_name: tst-spark-master
+    ports:
+      - "7077:7077"
+      - "8081:8080"
+    volumes:
+      - ../solution/spark/apps/qttg/bronze_qttg.py:/opt/spark/apps/qttg/bronze_qttg.py:ro
+      - ../solution/apps/qttg/silver_qttg.py:/opt/spark/apps/qttg/silver_qttg.py:ro
+      - ../solution/apps/qttg/gold_qttg.py:/opt/spark/apps/qttg/gold_qttg.py:ro
+      - ../solution/apps/qttg/validate_qttg.py:/opt/spark/apps/qttg/validate_qttg.py:ro
+      - ../requirements/data:/opt/spark/data/raw_qttg_1m:ro
+      - ../solution/output/spark_lake:/opt/spark/data/lake
+    networks:
+      - qttg-net
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master --host tst-spark-master --port 7077 --webui-port 8080
+
+  spark-worker:
+    image: apache/spark:3.5.3
+    container_name: tst-spark-worker
+    volumes:
+      - ../solution/spark/apps/qttg/bronze_qttg.py:/opt/spark/apps/qttg/bronze_qttg.py:ro
+      - ../solution/apps/qttg/silver_qttg.py:/opt/spark/apps/qttg/silver_qttg.py:ro
+      - ../solution/apps/qttg/gold_qttg.py:/opt/spark/apps/qttg/gold_qttg.py:ro
+      - ../solution/apps/qttg/validate_qttg.py:/opt/spark/apps/qttg/validate_qttg.py:ro
+      - ../requirements/data:/opt/spark/data/raw_qttg_1m:ro
+      - ../solution/output/spark_lake:/opt/spark/data/lake
+    depends_on:
+      - spark-master
+    networks:
+      - qttg-net
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://tst-spark-master:7077 --cores 2 --memory 2G
+
+volumes:
+  airflow-postgres:
+
+networks:
+  qttg-net:
+    name: airflow-local_qttg-net

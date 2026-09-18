@@ -1,5 +1,6 @@
 """Build the monthly Gold report from the cleaned Silver layer."""
 
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -34,6 +35,18 @@ SILVER_DETAIL_PATH = str(BASE_PATH / "silver" / "qttg_bhxh_detail")
 GOLD_PATH = str(BASE_PATH / "gold")
 DIM_THANG_PATH = str(Path(GOLD_PATH) / "dim_thang")
 REPORT_PATH = str(Path(GOLD_PATH) / "bao_cao_bhxh_thang")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build the QTTG monthly Gold report")
+    parser.add_argument("--input-dir")
+    parser.add_argument("--output-dir")
+    args = parser.parse_args()
+    if not args.input_dir:
+        args.input_dir = str(BASE_PATH / "silver")
+    if not args.output_dir:
+        args.output_dir = str(BASE_PATH / "gold")
+    return args
 
 
 def create_dim_thang(detail_df):
@@ -111,11 +124,14 @@ def build_report(detail_df, master_df, dim_thang_df):
 
 
 def main():
+    args = parse_args()
+    silver_path = args.input_dir.rstrip("/")
+    gold_path = args.output_dir.rstrip("/")
     spark = SparkSession.builder.appName("Gold QTTG Monthly Report").getOrCreate()
 
     try:
-        master_df = spark.read.parquet(SILVER_MASTER_PATH)
-        detail_df = spark.read.parquet(SILVER_DETAIL_PATH)
+        master_df = spark.read.parquet(f"{silver_path}/qttg_bhxh")
+        detail_df = spark.read.parquet(f"{silver_path}/qttg_bhxh_detail")
 
         invalid_period_count = detail_df.filter(
             col("TU_THANG") > col("DEN_THANG")
@@ -131,8 +147,12 @@ def main():
         if report_count != distinct_month_count:
             raise ValueError("Gold report contains duplicate THANG_ID values")
 
-        dim_thang_df.write.mode("overwrite").parquet(DIM_THANG_PATH)
-        report_df.write.mode("overwrite").parquet(REPORT_PATH)
+        dim_thang_df.write.mode("overwrite").parquet(
+            f"{gold_path}/dim_thang"
+        )
+        report_df.write.mode("overwrite").parquet(
+            f"{gold_path}/bao_cao_bhxh_thang"
+        )
 
         print(
             f"LAYER=GOLD STATUS=SUCCESS REPORT_ROWS={report_count} "

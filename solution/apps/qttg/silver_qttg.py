@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -36,6 +37,18 @@ VALIDATION_COLUMNS = [
     "_valid_period_range",
     "_valid_MUC_LUONG",
 ]
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Transform QTTG Bronze into Silver")
+    parser.add_argument("--input-dir")
+    parser.add_argument("--output-dir")
+    args = parser.parse_args()
+    if not args.input_dir:
+        args.input_dir = str(BASE_PATH / "bronze")
+    if not args.output_dir:
+        args.output_dir = str(BASE_PATH / "silver")
+    return args
 
 
 def deduplicate_latest(df):
@@ -123,6 +136,10 @@ def split_valid_invalid(df):
 
 
 def main():
+    args = parse_args()
+    bronze_path = args.input_dir.rstrip("/")
+    silver_path = args.output_dir.rstrip("/")
+    quarantine_path = str(Path(silver_path).parent / "quarantine" / "qttg_bhxh_detail")
     spark = (
         SparkSession.builder
         .appName("Silver QTTG")
@@ -130,8 +147,8 @@ def main():
     )
 
     try:
-        master_df = spark.read.parquet(BRONZE_MASTER_PATH)
-        detail_df = spark.read.parquet(BRONZE_DETAIL_PATH)
+        master_df = spark.read.parquet(f"{bronze_path}/raw_qttg_bhxh")
+        detail_df = spark.read.parquet(f"{bronze_path}/raw_qttg_bhxh_detail")
 
         latest_master_df = deduplicate_latest(master_df)
 
@@ -191,15 +208,15 @@ def main():
         )
 
         latest_master_df.write.mode("overwrite").parquet(
-            SILVER_MASTER_PATH
+            f"{silver_path}/qttg_bhxh"
         )
 
         valid_detail_df.write.mode("overwrite").parquet(
-            SILVER_DETAIL_PATH
+            f"{silver_path}/qttg_bhxh_detail"
         )
 
         invalid_detail_df.write.mode("overwrite").parquet(
-            QUARANTINE_DETAIL_PATH
+            quarantine_path
         )
 
         linked_detail_df.unpersist()
