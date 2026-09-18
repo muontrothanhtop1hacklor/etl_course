@@ -66,12 +66,5 @@ Lần chạy Bronze hiện dừng với `PATH_NOT_FOUND` vì
 lập qua Spark trên Silver/Gold hiện có đã đạt `MASTER_ROWS=21838`,
 `DETAIL_ROWS=169658`, `REPORT_ROWS=629`, `ERROR_ROWS=0`.
 
-## Vướng mắc còn lại
+<img width="1920" height="965" alt="image" src="https://github.com/user-attachments/assets/5007d83f-343a-4610-858d-2710800f7073" />
 
-- Raw CSV không nằm trong workspace hiện tại (`requirements/data` đang trống),
-  nên không thể chạy lại Bronze 1 triệu dòng từ workspace này.
-- Silver/Gold hiện đang nằm ở `solution/apps/qttg`, trong khi mẫu Docker mount
-  của tài liệu dùng chung `/opt/spark/apps/qttg`; cần mount/copy đủ bốn job vào
-  cùng app directory khi dựng Compose.
-- Chưa có ảnh chụp Airflow Graph/Grid hoặc log UI trong repo; cần bổ sung sau
-  lần chạy Docker thực tế.
