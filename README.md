@@ -48,7 +48,7 @@ etl_learn/
 │   ├── HUONG_DAN_AIRFLOW_SPARK_LOCAL.md
 │   └── PHAN_TICH_NGHIEP_VU_QTTG_BHXH.md
 ├── solution/
-│   ├── spark/apps/qttg/bronze_qttg.py
+│   ├── apps/qttg/bronze_qttg.py
 │   ├── apps/qttg/
 │   │   ├── silver_qttg.py
 │   │   └── gold_qttg.py
@@ -78,7 +78,7 @@ etl_learn/
 ## 5. Cách chạy
 
 ```powershell
-python .\solution\spark\apps\qttg\bronze_qttg.py
+python .\solution\apps\qttg\bronze_qttg.py
 ```
 
 Hoặc nếu dùng file app ETL tổng quát:
